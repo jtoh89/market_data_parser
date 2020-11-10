@@ -16,6 +16,12 @@ df = df[df['Missing Metro?'] != 'Yes'].drop(columns=['State 1','State 2','Missin
 
 df[['Geo_Id','Zillow_Id']] = df[['Geo_Id','Zillow_Id']].apply(lambda x: x.astype(int).astype(str))
 
+df = df.append({'Geo_Id': '999',
+           'Zillow_Id': '102001',
+           'Zillow_MSA_Name': 'United States',
+            'MSA_Name':'United States'
+           }, ignore_index=True)
+
 
 sql = sql_caller.SqlCaller(create_tables=True)
 sql.db_dump_Zillow_MSAID_Lookup(df)

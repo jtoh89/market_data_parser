@@ -29,6 +29,13 @@ class Zillow_MedianHomePrice(Base):
 #     MedianHomePrice = Column(Integer, unique=False)
 
 
+class Zillow_MSAID_Lookup(Base):
+    __tablename__ = "Zillow_MSAID_Lookup"
+    Zillow_Id = Column(String(10), unique=False, primary_key=True)
+    Zillow_MSA_Name = Column(String(50), unique=False)
+    Geo_ID = Column(String(10), unique=False)
+    MSA_Name = Column(String(50), unique=False)
+
 class InitiateDeclaratives():
     @staticmethod
     def create_tables(engine_string):

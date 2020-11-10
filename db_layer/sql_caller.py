@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from db_layer import models
 import pandas as pd
 import json
+import os
 
 class SqlCaller():
     """
@@ -14,7 +15,9 @@ class SqlCaller():
     """
 
     def __init__(self, create_tables=False):
-        with open("./un_pw.json", "r") as file:
+        path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'un_pw.json'))
+
+        with open(path, "r") as file:
             mysql_engine = json.load(file)['aws_mysql']
         engine_string = mysql_engine
         self.engine = create_engine(engine_string)
@@ -24,8 +27,16 @@ class SqlCaller():
             models.InitiateDeclaratives.create_tables(engine_string)
 
 
+    def db_get_Zillow_MSAID_Lookup(self):
+        msa_ids = pd.read_sql_query("""select Geo_ID, Zillow_Id from Zillow_MSAID_Lookup""", self.engine)
+        return msa_ids
+
     def db_dump_Zillow_MedianHomePrice(self, df):
         df.to_sql("Zillow_MedianHomePrice", if_exists='replace', con=self.engine, index=False)
+
+
+    def db_dump_Zillow_MSAID_Lookup(self, df):
+        df.to_sql("Zillow_MSAID_Lookup", if_exists='replace', con=self.engine, index=False)
 
     # def db_dump_Zillow_County_MedianHomePrice(self, df):
     #     df.to_sql("Zillow_County_MedianHomePrice", if_exists='replace', con=self.engine, index=False)
